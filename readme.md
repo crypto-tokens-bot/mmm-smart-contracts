@@ -37,8 +37,7 @@ Updates totalStable and totalBorrowMMM.
 Formula:
 When withdrawing X MMM, the user receives:
 
-![](/static/formula3.png)
-
+### ReceivedUSDT = X × Price
 
 If price = 1.1 USDT, then 500 MMM → 550 USDT.
 
@@ -48,3 +47,42 @@ Contract Logic:
 The user sends MMM to the contract.
 The contract transfers USDT to the user at the current price.
 Updates totalStable and totalBorrowMMM.
+
+### 🔹 How is Profit Added?
+Formula:
+When Y USDT profit is added, the MMM price increases:
+
+![](/static/formula3.png)
+
+If the contract has 1000 USDT and 1000 MMM, after addProfit(100 USDT):
+
+- Price becomes 1.1 USDT/MMM.
+
+- But totalBorrowMMM remains unchanged.
+
+
+Contract Logic:
+The contract receives USDT.
+Updates totalStable.
+The MMM price increases automatically.
+
+
+### 🔹 Example Workflow
+1. Initial State
+Contract is empty: 0 USDT / 0 MMM.
+
+2. User Deposits 1000 USDT
+totalStable = 1000
+totalBorrowMMM = 1000
+Price of 1 MMM = 1 USDT.
+
+3. The Contract Earns 100 USDT
+totalStable = 1100
+totalBorrowMMM = 1000
+Price of 1 MMM = 1.1 USDT.
+
+4. User Withdraws 500 MMM
+Receives 500 * 1.1 = 550 USDT.
+totalStable = 550
+totalBorrowMMM = 500
+Price remains 1.1 USDT/MMM.
