@@ -11,12 +11,20 @@
   "description": "",
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.8",
+    "@nomicfoundation/hardhat-ethers": "^3.0.8",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@openzeppelin/contracts": "^5.1.0",
-    "chai": "^5.1.2",
+    "@typechain/ethers-v6": "^0.5.1",
+    "@typechain/hardhat": "^9.1.0",
+    "@types/chai": "^4.2.0",
+    "@types/mocha": "^10.0.10",
+    "chai": "^4.3.8",
     "dotenv": "^16.4.7",
     "ethers": "^6.13.4",
     "hardhat": "^2.22.17",
     "hardhat-ethers": "^1.0.1",
-    "hardhat-waffle": "^0.0.1-security"
+    "hardhat-waffle": "^0.0.1-security",
+    "ts-node": "^10.9.2",
+    "typechain": "^8.3.2"
   }
 }
