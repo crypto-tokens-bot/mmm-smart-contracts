@@ -74,7 +74,7 @@ contract Token1 is ERC20, Ownable {
         emit Withdrawn(msg.sender, amount, usdtAmount);
     }
 
-    function addProfit(uint256 amount) external onlyOwner {
+    function addProfit(uint256 amount) external {
         require(amount > 0, "Amount must be greater than 0");
         require(usdt.balanceOf(msg.sender) >= amount, "Not enough USDT");
 
@@ -82,6 +82,13 @@ contract Token1 is ERC20, Ownable {
         totalStable += amount;
 
         emit ProfitAdded(amount);
+    }
+
+    function correctStable(uint256 amount) external onlyOwner {
+        require(amount > 0, "Amount must be greater than 0");
+        require(totalStable >= amount, "Cannot reduce below 0");
+
+        totalStable -= amount;
     }
 
     function getPrice() external view returns (uint256) {
