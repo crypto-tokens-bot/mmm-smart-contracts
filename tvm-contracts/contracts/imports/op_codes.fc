@@ -1,0 +1,4 @@
+const int op::deposit = "op::deposit"c; ;; f9471134
+const int op::withdraw = "op::withdraw"c; ;; cb03bfaf
+const int op::add_profit = "op::add_profit"c; ;; 7f33f0fa
+const int op::correct_stable = "op::correct_stable"c; ;; 19026c9b
