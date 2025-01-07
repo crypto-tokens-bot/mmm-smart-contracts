@@ -13,6 +13,7 @@
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.8",
     "@nomicfoundation/hardhat-ethers": "^3.0.8",
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.12",
     "@openzeppelin/contracts": "^5.1.0",
     "@typechain/ethers-v6": "^0.5.1",
     "@typechain/hardhat": "^9.1.0",
@@ -23,6 +24,7 @@
     "ethers": "^6.13.4",
     "hardhat": "^2.22.17",
     "hardhat-ethers": "^1.0.1",
+    "hardhat-gas-reporter": "^2.2.2",
     "hardhat-waffle": "^0.0.1-security",
     "ts-node": "^10.9.2",
     "typechain": "^8.3.2"
