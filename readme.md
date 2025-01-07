@@ -2,7 +2,12 @@
 ```
 npx hardhat compile
 ```
-
+### Run tests:
+```
+npx hardhat tests
+```
+### After this command you can see result like this:
+![](/static/tests_result.png)
 
 ### The contract is intended for tokenization of capital. Users can deposit USDT/USDC and receive MM tokens (an analog of the fund's shares) in return. These funds are then invested (staking, trading, hedging), and profits are distributed through a change in the exchange rate of the MMM token.
 
