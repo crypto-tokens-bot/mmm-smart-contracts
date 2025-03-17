@@ -1,0 +1,6 @@
+{
+    "sepolia": {
+        "MockUSDT": "0x94Ed3a8fA3E4601DC21Ab1b003271C5e58b7Fed2",
+        "MMM": "0xc9Cf4D74BF240B26ae1b613f85696eE8DA0aD549"
+    }
+}
