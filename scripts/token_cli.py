@@ -43,18 +43,15 @@ ABI = [
     {"constant": True,"inputs": [],"name": "totalBorrowMMM","outputs": [{"name":"","type":"uint256"}],"type": "function"},
 ]
 
-# 3) соединяемся и создаём инстанс
 w3       = Web3(Web3.HTTPProvider(RPC_URL))
 contract = w3.eth.contract(Web3.to_checksum_address(CONTRACT_ADDR), abi=ABI)
 
-# 4) функции-обёртки
 def get_balance(user: str):
     raw = contract.functions.balanceOf(Web3.to_checksum_address(user)).call()
     print(f"balanceOf({user}) = {w3.from_wei(raw,'ether')} MMM")
 
 def get_price():
     raw = contract.functions.getPrice().call()
-    # цена в 1e18
     print(f"getPrice() = {w3.from_wei(raw,'ether')} USDT / MMM")
 
 def get_usdt():
@@ -73,17 +70,17 @@ def get_total_borrow():
     raw = contract.functions.totalBorrowMMM().call()
     print(f"totalBorrowMMM() = {w3.from_wei(raw,'ether')} MMM")
 
-# 5) простой CLI
+# Like CLI
 USAGE = """
 Usage: python token_cli.py <command>
 
 Commands:
-  balance      — показать balanceOf(USER_ADDRESS)
-  price        — вызвать getPrice()
-  usdt         — вызвать usdt()
-  treasury     — вызвать treasury()
-  totalStable  — вызвать totalStable()
-  totalBorrow  — вызвать totalBorrowMMM()
+  balance — show balanceOf(USER_ADDRESS)
+price — call getPrice()
+usdt — call usdt()
+treasury     — call treasury()
+totalStable — call totalStable()
+totalBorrow — call totalBorrowMMM()
 """
 
 def main():
