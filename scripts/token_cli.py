@@ -16,7 +16,6 @@ import sys
 from dotenv import load_dotenv
 from web3 import Web3
 
-# 1) загрузим .env
 load_dotenv()
 
 RPC_URL         = "https://ethereum-sepolia-rpc.publicnode.com"
@@ -27,7 +26,7 @@ if not RPC_URL or not CONTRACT_ADDR:
     print("❌ Please set RPC_URL and CONTRACT_ADDRESS in your .env")
     sys.exit(1)
 
-# 2) ABI только тех методов, которые нам нужны
+# ABI 
 ABI = [
     {
       "constant": True,
@@ -43,7 +42,7 @@ ABI = [
     {"constant": True,"inputs": [],"name": "totalBorrowMMM","outputs": [{"name":"","type":"uint256"}],"type": "function"},
 ]
 
-w3       = Web3(Web3.HTTPProvider(RPC_URL))
+w3 = Web3(Web3.HTTPProvider(RPC_URL))
 contract = w3.eth.contract(Web3.to_checksum_address(CONTRACT_ADDR), abi=ABI)
 
 def get_balance(user: str):
