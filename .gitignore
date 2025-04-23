@@ -4,3 +4,5 @@ artifacts
 cache
 package-lock.json
 typechain-types
+lib/forge-std
+lib/forge-std

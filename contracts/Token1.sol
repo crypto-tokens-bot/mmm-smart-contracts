@@ -36,6 +36,10 @@ contract Token1 is ERC20, Ownable {
         treasury = _treasury;
     }
 
+    function mint(address to, uint256 amount) external onlyOwner {
+        _mint(to, amount);
+    }
+
     function deposit(uint256 amount, address stablecoin) external {
         require(amount > 0, "amount must be more then 0");
         require(stablecoin == address(usdt), "Unsupported stablecoin");

@@ -1,7 +1,7 @@
 import { ethers } from "hardhat";
 import * as dotenv from 'dotenv';
 
-import {sepolia, arbitrum_sepolia } from "../addresses/token_list.json";
+import {sepolia } from "../addresses/token_list.json";
 
 async function main() {
     const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
