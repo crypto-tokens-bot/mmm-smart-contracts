@@ -6,8 +6,19 @@ npx hardhat compile
 ```
 npx hardhat tests
 ```
+
 ### After executing this command, you can see the following result:
 ![](/static/tests_result.png)
+
+### Deploy smart contracts:
+```
+hardhat run scripts/deployToken1.ts --network {network_name}
+```
+also you can use ready script from package.json:
+```
+npm run deploy:Token1
+```
+
 
 ### The contract is intended for tokenization of capital. Users can deposit USDT/USDC and receive MM tokens (an analog of the fund's shares) in return. These funds are then invested (staking, trading, hedging), and profits are distributed through a change in the exchange rate of the MMM token.
 
@@ -57,6 +68,7 @@ uint256 currentPrice = (totalStable * 1e18) / totalBorrowMMM;
 
 avgEntryPrice[msg.sender] = ((oldBal * oldAvg) + (mmmAmount * currentPrice)) / (oldBal + mmmAmount);
 ```
+
 Mints the calculated amount of MMM tokens to the user.
 
 Records the user’s “rewardDebt” against the current accProfitPerShare.

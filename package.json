@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy:Token1": "hardhat run scripts/deployToken1.ts --network sepolia",
+    "verify:Token1": "hardhat verify --network sepolia $npm_package_config_token1_address $npm_package_config_usdt_address $npm_package_config_treasury_address"
   },
   "keywords": [],
   "author": "",
