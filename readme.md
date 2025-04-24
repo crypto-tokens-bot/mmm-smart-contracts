@@ -10,6 +10,13 @@ npx hardhat tests
 ### After executing this command, you can see the following result:
 ![](/static/tests_result.png)
 
+### For exploring your or other smart-contract you can use:
+- Ethereum: https://etherscan.io/
+- Ethereum sepolia: https://sepolia.etherscan.io/
+- Arbitrum: https://arbiscan.io/
+- Arbitrum sepolia: https://sepolia.arbiscan.io/
+- Ronin: https://app.roninchain.com/
+
 ### Deploy smart contracts:
 ```
 hardhat run scripts/deployToken1.ts --network {network_name}
