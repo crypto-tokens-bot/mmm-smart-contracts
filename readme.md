@@ -6,13 +6,43 @@ npx hardhat compile
 ```
 npx hardhat tests
 ```
+
 ### After executing this command, you can see the following result:
 ![](/static/tests_result.png)
 
+### For exploring your or other smart-contract you can use:
+- Ethereum: https://etherscan.io/
+- Ethereum sepolia: https://sepolia.etherscan.io/
+- Arbitrum: https://arbiscan.io/
+- Arbitrum sepolia: https://sepolia.arbiscan.io/
+- Ronin: https://app.roninchain.com/
+
+### Deploy smart contracts:
+```
+hardhat run scripts/deployToken1.ts --network {network_name}
+```
+also you can use ready script from package.json:
+```
+npm run deploy:Token1
+```
+
+
 ### The contract is intended for tokenization of capital. Users can deposit USDT/USDC and receive MM tokens (an analog of the fund's shares) in return. These funds are then invested (staking, trading, hedging), and profits are distributed through a change in the exchange rate of the MMM token.
 
+### CLI scripts: 
+#### Using the CLI, you can call any function to read from a smart contract.
+```
+pip install web3 python-dotenv
 
+# chmod +x token_cli.py 
 
+# ./token_cli.py balance
+# ./token_cli.py price
+# ./token_cli.py usdt
+# ./token_cli.py treasury
+# ./token_cli.py totalStable
+# ./token_cli.py totalBorrow
+```
 ### 🔹 How is the MMM Price Calculated?
 The price formula:
 ![](/static/formula.png)
@@ -37,6 +67,20 @@ The user approves the contract to spend their USDT.
 The contract transfers USDT to itself.
 Calculates the amount of MMM to issue.
 Updates totalStable and totalBorrowMMM.
+
+Updates the depositor’s average entry price:
+```solidity
+uint256 currentPrice = (totalStable * 1e18) / totalBorrowMMM;
+// weighted average: (oldBalance * oldAvg + newTokens * currentPrice) / (oldBalance + newTokens)
+
+avgEntryPrice[msg.sender] = ((oldBal * oldAvg) + (mmmAmount * currentPrice)) / (oldBal + mmmAmount);
+```
+
+Mints the calculated amount of MMM tokens to the user.
+
+Records the user’s “rewardDebt” against the current accProfitPerShare.
+
+As a result, for each user we always keep track of their average entry price (in 1e18 format), so it’s possible later to compute their exact profit or perform any price‐based accounting on a per‐user basis.
 
 ### 🔹 How Does Withdrawing Work?
 Formula:
