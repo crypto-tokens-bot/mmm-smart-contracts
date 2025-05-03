@@ -1,0 +1,2 @@
+const int error::unknown_op = 0xffff;
+const int error::no_mmm_issued = 0xfffb;
