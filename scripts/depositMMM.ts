@@ -3,8 +3,15 @@ import * as dotenv from 'dotenv';
 
 import {sepolia } from "../addresses/token_list.json";
 
+const isTest = process.env.NODE_ENV === "test";
+
+const RPC_URL = isTest
+  ? process.env.TEST_RPC_URL!
+  : process.env.RPC_URL!;
+
 async function main() {
-    const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
+    const provider = new ethers.JsonRpcProvider(RPC_URL);
+    console.log(`provider created:${RPC_URL}`);
     const wallet = new ethers.Wallet(process.env.PRIVATE_KEY || "0x", provider);
 
     const mockUSDTAddress = sepolia.MockUSDT || "0x";

@@ -5,7 +5,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy:Token1": "hardhat run scripts/deployToken1.ts --network sepolia",
-    "verify:Token1": "hardhat verify --network sepolia $npm_package_config_token1_address $npm_package_config_usdt_address $npm_package_config_treasury_address"
+    "verify:Token1": "hardhat verify --network sepolia $npm_package_config_token1_address $npm_package_config_usdt_address $npm_package_config_treasury_address",
+    "read:token": "ts-node scripts/readTokenData.ts",
+    "check:usdt": "ts-node scripts/checkMockUSDT.ts",
+    "depositMMM": "ts-node scripts/depositMMM.ts"
   },
   "keywords": [],
   "author": "",
