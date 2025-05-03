@@ -2,5 +2,9 @@
     "sepolia": {
         "MockUSDT": "0x94Ed3a8fA3E4601DC21Ab1b003271C5e58b7Fed2",
         "MMM": "0xc9Cf4D74BF240B26ae1b613f85696eE8DA0aD549"
+    },
+    "fork": {
+        "MockUSDT": "0x73a8a92025708dc795b57202f40c6883c3d5b300",
+        "MMM": "0x6d2a5fe96a1a03a1c88c5f52b46699d769551d7c"
     }
 }
