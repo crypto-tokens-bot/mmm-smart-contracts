@@ -13,7 +13,8 @@
     "read:totalStable": "ts-node scripts/readToken1.ts totalStable",
     "read:totalBorrow": "ts-node scripts/readToken1.ts totalBorrow",
     "read:token": "ts-node scripts/readTokenData.ts --network localhost",
-    "check:usdt": "ts-node scripts/checkMockUSDT.ts --network localhost"
+    "check:usdt": "ts-node scripts/checkMockUSDT.ts --network localhost",
+    "depositMMM": "ts-node scripts/depositMMM.ts --network localhost"
   },
   "keywords": [],
   "author": "",
