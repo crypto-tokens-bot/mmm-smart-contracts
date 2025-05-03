@@ -6,15 +6,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy:Token1": "hardhat run scripts/deployToken1.ts --network sepolia",
     "verify:Token1": "hardhat verify --network sepolia $npm_package_config_token1_address $npm_package_config_usdt_address $npm_package_config_treasury_address",
-    "read:balance":     "ts-node scripts/readToken1.ts balance",
-    "read:price":       "ts-node scripts/readToken1.ts price",
-    "read:usdt":        "ts-node scripts/readToken1.ts usdt",
-    "read:treasury":    "ts-node scripts/readToken1.ts treasury",
-    "read:totalStable": "ts-node scripts/readToken1.ts totalStable",
-    "read:totalBorrow": "ts-node scripts/readToken1.ts totalBorrow",
-    "read:token": "ts-node scripts/readTokenData.ts --network localhost",
-    "check:usdt": "ts-node scripts/checkMockUSDT.ts --network localhost",
-    "depositMMM": "ts-node scripts/depositMMM.ts --network localhost"
+    "read:token": "ts-node scripts/readTokenData.ts",
+    "check:usdt": "ts-node scripts/checkMockUSDT.ts",
+    "depositMMM": "ts-node scripts/depositMMM.ts"
   },
   "keywords": [],
   "author": "",
