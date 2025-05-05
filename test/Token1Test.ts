@@ -136,35 +136,40 @@ describe("CapitalMMM Smart Contract", function () {
     const correctionAmount = toWei("200");
     const ONE_18 = toWei("1");
 
-    // after beforeEach we already have a deposit of 1000
-    // we make addProfit(correctionAmount)
-    await usdtMock.mint(await owner.getAddress(), correctionAmount);
+    // --- 1) The first deposit, so that there is something to write off ---
+    await usdtMock
+      .connect(user1)
+      .approve(await contract.getAddress(), depositAmount);
     await contract
       .connect(user1)
-      .deposit(toWei("100"), await usdtMock.getAddress());
+      .deposit(depositAmount, await usdtMock.getAddress());
 
+    // --- 2) Profit ---
+    await usdtMock.mint(await owner.getAddress(), correctionAmount);
     await usdtMock
       .connect(owner)
       .approve(await contract.getAddress(), correctionAmount);
     await contract.connect(owner).addProfit(correctionAmount);
 
-    // storing old values as bigint
+    // --- 3) Let's remember the state before ---
     const beforeStable = await contract.totalStable(); // bigint
     const beforeAcc = await contract.accProfitPerShare(); // bigint
 
-    // now correctStable
+    // --- 4) Update again (important!) and call correctStable ---
+    // (correctStable doesn't use USDT, so we don't need an app for it,
+    // but we'll use a higher app for deposit if we were repeating deposit)
     await contract.connect(owner).correctStable(correctionAmount);
 
-    // 1) totalStable should become beforeStable - correction Amount
+    // --- 5) Checks ---
     const afterStable = await contract.totalStable();
     expect(afterStable).to.equal(beforeStable - correctionAmount);
 
-    // 2) accProfitPerShare должно стать beforeAcc - (correctionAmount*1e18 / totalBorrowMMM)
-    const totalBorrow = await contract.totalBorrowMMM(); // bigint
+    const totalBorrow = await contract.totalBorrowMMM();
     const expectedDelta = (correctionAmount * ONE_18) / totalBorrow;
     const afterAcc = await contract.accProfitPerShare();
     expect(afterAcc).to.equal(beforeAcc - expectedDelta);
   });
+
   it("`correctStable()` should revert if trying to reduce more than totalStable", async function () {
     const depositAmount = ethers.parseUnits("1000", 18);
     const excessiveCorrection = ethers.parseUnits("1100", 18); // More than totalStable
