@@ -32,6 +32,7 @@ contract Token1 is ERC20, Ownable {
     );
     event ProfitAdded(uint256 amountUSDT);
     event ProfitClaimed(address indexed user, uint256 amountUSDT);
+    event LossAdded(uint256 amountUSDT);
 
     constructor(
         address _usdt,
@@ -69,6 +70,25 @@ contract Token1 is ERC20, Ownable {
         totalStable += amount;
         totalBorrowMMM += mmmAmount;
 
+        {
+            uint256 prevBal = balanceOf(msg.sender);
+            uint256 newBal = prevBal + mmmAmount;
+            // The current price is 1 MMM in USDT, including the newly added funds
+            uint256 currentPrice = (totalStable * 1e18) / totalBorrowMMM;
+
+            if (prevBal == 0) {
+                // if there was no position before, the average price is just the current one.
+                avgEntryPrice[msg.sender] = currentPrice;
+            } else {
+                // weighted average of the old and new parts
+                avgEntryPrice[msg.sender] =
+                    (prevBal *
+                        avgEntryPrice[msg.sender] +
+                        mmmAmount *
+                        currentPrice) /
+                    newBal;
+            }
+        }
         _mint(msg.sender, mmmAmount);
         rewardDebt[msg.sender] =
             (balanceOf(msg.sender) * accProfitPerShare) /
@@ -130,11 +150,34 @@ contract Token1 is ERC20, Ownable {
     function correctStable(uint256 amount) external onlyOwner {
         require(amount > 0, "Amount must be greater than 0");
         require(totalStable >= amount, "Cannot reduce below 0");
+        require(totalBorrowMMM > 0, "No MMM minted");
 
         totalStable -= amount;
+        accProfitPerShare -= (amount * 1e18) / totalBorrowMMM;
+
+        emit LossAdded(amount);
     }
 
     function getPrice() external view returns (uint256) {
+        require(totalBorrowMMM > 0, "No MMM minted");
         return (totalStable * 10 ** 18) / totalBorrowMMM;
+    }
+
+    function pendingProfitOf(address user) public view returns (uint256) {
+        uint256 _acc = accProfitPerShare;
+        uint256 bal = balanceOf(user);
+        uint256 accumulated = (bal * _acc) / 1e18; // the amount of profit on the current acc
+        uint256 debt = rewardDebt[user]; // the part that has already been accounted for
+
+        uint256 newOwed = 0;
+        if (accumulated > debt) {
+            newOwed = accumulated - debt; // only a positive difference
+        }
+
+        return pendingProfit[user] + newOwed;
+    }
+
+    function getAvgEntryPrice(address user) external view returns (uint256) {
+        return avgEntryPrice[user];
     }
 }

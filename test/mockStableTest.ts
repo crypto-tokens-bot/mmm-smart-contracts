@@ -11,7 +11,7 @@ describe("MockUSDT", function () {
     [deployer, user] = (await ethers.getSigners()).map((s) => s.address);
     const Factory = await ethers.getContractFactory("MockUSDT");
     usdt = (await Factory.deploy()) as MockUSDT;
-    await usdt.deployed();
+    await usdt.waitForDeployment();
   });
 
   it("constructor: the deployment has 1 000 000 USDT", async function () {

@@ -13,6 +13,8 @@ describe("CapitalMMM Smart Contract", function () {
   let usdtMock: ERC20Mock;
   let owner: Signer, user1: Signer, user2: Signer;
 
+  const toWei = (n: string) => ethers.parseUnits(n, 18);
+
   beforeEach(async function () {
     [owner, user1, user2] = await ethers.getSigners();
 
@@ -129,9 +131,48 @@ describe("CapitalMMM Smart Contract", function () {
     await expect(contract.connect(owner).addProfit(profitAmount)).to.be
       .reverted;
   });
-  it("`correctStable()` should reduce totalStable correctly", async function () {
+  it("should succeed after addProfit and update totalStable & accProfitPerShare", async function () {
+    const depositAmount = toWei("1000");
+    const correctionAmount = toWei("200");
+    const ONE_18 = toWei("1");
+
+    // --- 1) The first deposit, so that there is something to write off ---
+    await usdtMock
+      .connect(user1)
+      .approve(await contract.getAddress(), depositAmount);
+    await contract
+      .connect(user1)
+      .deposit(depositAmount, await usdtMock.getAddress());
+
+    // --- 2) Profit ---
+    await usdtMock.mint(await owner.getAddress(), correctionAmount);
+    await usdtMock
+      .connect(owner)
+      .approve(await contract.getAddress(), correctionAmount);
+    await contract.connect(owner).addProfit(correctionAmount);
+
+    // --- 3) Let's remember the state before ---
+    const beforeStable = await contract.totalStable(); // bigint
+    const beforeAcc = await contract.accProfitPerShare(); // bigint
+
+    // --- 4) Update again (important!) and call correctStable ---
+    // (correctStable doesn't use USDT, so we don't need an app for it,
+    // but we'll use a higher app for deposit if we were repeating deposit)
+    await contract.connect(owner).correctStable(correctionAmount);
+
+    // --- 5) Checks ---
+    const afterStable = await contract.totalStable();
+    expect(afterStable).to.equal(beforeStable - correctionAmount);
+
+    const totalBorrow = await contract.totalBorrowMMM();
+    const expectedDelta = (correctionAmount * ONE_18) / totalBorrow;
+    const afterAcc = await contract.accProfitPerShare();
+    expect(afterAcc).to.equal(beforeAcc - expectedDelta);
+  });
+
+  it("`correctStable()` should revert if trying to reduce more than totalStable", async function () {
     const depositAmount = ethers.parseUnits("1000", 18);
-    const correctionAmount = ethers.parseUnits("200", 18);
+    const excessiveCorrection = ethers.parseUnits("1100", 18); // More than totalStable
 
     await usdtMock
       .connect(user1)
@@ -140,30 +181,25 @@ describe("CapitalMMM Smart Contract", function () {
       .connect(user1)
       .deposit(depositAmount, await usdtMock.getAddress());
 
-    await contract.connect(owner).correctStable(correctionAmount);
-
-    const newTotalStable = await contract.totalStable();
-    console.log(
-      "Total Stable after correction:",
-      ethers.formatUnits(newTotalStable, 18)
-    );
-
-    expect(newTotalStable).to.equal(depositAmount - correctionAmount);
+    await expect(
+      contract.connect(owner).correctStable(excessiveCorrection)
+    ).to.be.revertedWith("Cannot reduce below 0");
   });
-  it("`correctStable()` should revert if trying to reduce more than totalStable", async function () {
-    const depositAmount = ethers.parseUnits("1000", 18);
-    const excessiveCorrection = ethers.parseUnits("1100", 18); // More than totalStable
+  it("`correctStable()` should only be callable by the owner", async function () {
+    const correctionAmount = ethers.parseUnits("100", 18);
 
-    await usdtMock.connect(user1).approve(await contract.getAddress(), depositAmount);
-    await contract.connect(user1).deposit(depositAmount, await usdtMock.getAddress());
-
-    await expect(contract.connect(owner).correctStable(excessiveCorrection))
-        .to.be.revertedWith("Cannot reduce below 0");
-});
-it("`correctStable()` should only be callable by the owner", async function () {
-  const correctionAmount = ethers.parseUnits("100", 18);
-
-  await expect(contract.connect(user1).correctStable(correctionAmount))
-      .to.be.reverted;
-});
+    await expect(contract.connect(user1).correctStable(correctionAmount)).to.be
+      .reverted;
+  });
+  it("pendingProfitOf = 0 immediately after the deposit", async function () {
+    await usdtMock
+      .connect(user1)
+      .approve(await contract.getAddress(), toWei("100"));
+    await contract
+      .connect(user1)
+      .deposit(toWei("100"), await usdtMock.getAddress());
+    expect(await contract.pendingProfitOf(await user1.getAddress())).to.equal(
+      0
+    );
+  });
 });
