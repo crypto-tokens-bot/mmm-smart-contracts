@@ -8,7 +8,8 @@
     "verify:Token1": "hardhat verify --network sepolia $npm_package_config_token1_address $npm_package_config_usdt_address $npm_package_config_treasury_address",
     "read:token": "ts-node scripts/readTokenData.ts",
     "check:usdt": "ts-node scripts/checkMockUSDT.ts",
-    "depositMMM": "ts-node scripts/depositMMM.ts"
+    "depositMMM": "ts-node scripts/depositMMM.ts",
+    "estimateGasFee:Token1": "npx hardhat run --network sepolia scripts/estimateGasFee.ts"
   },
   "keywords": [],
   "author": "",
