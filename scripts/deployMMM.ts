@@ -12,8 +12,6 @@ async function main() {
 
   console.log("🚀 Deploying Token1 contract...");
 
-  // const [deployer] = await ethers.getSigners();
-  // console.log("📌 Deployer Address:", await deployer.getAddress());
   if (network.name === "hardhat" || network.name === "localhost") {
     // — local node / fork: we take the first account from hardhat
     [deployer] = await ethers.getSigners();
